@@ -1,0 +1,70 @@
+
+The Comix Zone patch replaces an addi.w with a bra.b (branch always).
+It skips over several subroutine calls, which must be responsible for the shadow of the unroll animation on the title screen.
+
+The smash pack emulator has an issue with VDP highlight and shadow.
+If you load comix zone as another game, you can see how glitched the animation is.
+The starting drop level of vectorman 2 is also bugged. Look at the lense flare effect. The parts of it are solid.
+Also, the whole scene is too bright.
+
+ORIGINAL
+0x001e5c54      06450071       addi.w 0x71, d5
+0x001e5c58      383c0080       move.w 0x80, d4
+0x001e5c5c      303c0d00       move.w 0xd00, d0
+0x001e5c60      7409           moveq 0x9, d2
+0x001e5c62      4eb9001cd2a4   jsr 0x1cd2a4.l  
+0x001e5c68      06440020       addi.w 0x20, d4
+0x001e5c6c      51cafff4       dbra d2, 0x1e5c62
+0x001e5c70      0c450105       cmpi.w 0x105, d5
+0x001e5c74      6f1e           ble.b 0x1e5c94
+x001e5c76      3f05           move.w d5, -(a7)
+x001e5c78      3a03           move.w d3, d5
+x001e5c7a      06450080       addi.w 0x80, d5
+x001e5c7e      303c0300       move.w 0x300, d0
+x001e5c82      7801           moveq 0x1, d4
+x001e5c84      4eb9001cd2a4   jsr 0x1cd2a4.l  
+x001e5c8a      7800           moveq 0x0, d4
+x001e5c8c      4eb9001cd2a4   jsr 0x1cd2a4.l  
+x001e5c92      3a1f           move.w (a7)+, d5
+0x001e5c94      383c0080       move.w 0x80, d4
+0x001e5c98      06450012       addi.w 0x12, d5
+0x001e5c9c      303c0f00       move.w 0xf00, d0
+0x001e5ca0      5041           addq.w 0x8, d1
+0x001e5ca2      7409           moveq 0x9, d2
+0x001e5ca4      4eb9001cd2a4   jsr 0x1cd2a4.l  
+0x001e5caa      06440020       addi.w 0x20, d4
+0x001e5cae      51cafff4       dbra d2, 0x1e5ca4
+0x001e5cb2      4eb9001cd254   jsr 0x1cd254.l  
+
+
+
+PATCHED
+
+0x001e5c54      605c           bra.b 0x1e5cb2            
+0x001e5c56      0071383c0080   ori.w 0x383c, -0x80(a1, d0.w)
+0x001e5c5c      303c0d00       move.w 0xd00, d0
+0x001e5c60      7409           moveq 0x9, d2
+0x001e5c62      4eb9001cd2a4   jsr 0x1cd2a4.l            
+0x001e5c68      06440020       addi.w 0x20, d4
+0x001e5c6c      51cafff4       dbra d2, 0x1e5c62
+0x001e5c70      0c450105       cmpi.w 0x105, d5
+0x001e5c74      6f1e           ble.b 0x1e5c94
+0x001e5c76      3f05           move.w d5, -(a7)
+0x001e5c78      3a03           move.w d3, d5
+0x001e5c7a      06450080       addi.w 0x80, d5
+0x001e5c7e      303c0300       move.w 0x300, d0
+0x001e5c82      7801           moveq 0x1, d4
+0x001e5c84      4eb9001cd2a4   jsr 0x1cd2a4.l
+0x001e5c8a      7800           moveq 0x0, d4
+0x001e5c8c      4eb9001cd2a4   jsr 0x1cd2a4.l
+0x001e5c92      3a1f           move.w (a7)+, d5
+0x001e5c94      383c0080       move.w 0x80, d4
+0x001e5c98      06450012       addi.w 0x12, d5
+0x001e5c9c      303c0f00       move.w 0xf00, d0
+0x001e5ca0      5041           addq.w 0x8, d1
+0x001e5ca2      7409           moveq 0x9, d2
+0x001e5ca4      4eb9001cd2a4   jsr 0x1cd2a4.l            
+0x001e5caa      06440020       addi.w 0x20, d4
+0x001e5cae      51cafff4       dbra d2, 0x1e5ca4
+0x001e5cb2      4eb9001cd254   jsr 0x1cd254.l            
+ 

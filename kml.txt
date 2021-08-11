@@ -1,0 +1,66 @@
+16 byte headers. 4 dwords, little endian for sizes
+first is magic string
+second is section number, starting index 0
+third is size of section
+fourth is decompressed size.
+Run length encoding with run flag bits
+
+SECTIONS smash pack 2 mainblok.kml
+0: 160 112 comix zone
+1: 160 112 flicky
+2: 160 112 kid chameleon
+3: 160 112 shining force
+4: 160 112 sonic 2
+5: 160 112 super hang on
+6: 160 112 vectorman 2
+7: 160 112 sonic 2 arcade setting
+8: 160 112 sonic 2 fullscreen setting
+9: 320 240 sega logo
+10: 12 12 cursor
+11: 17 36 navigation arrow graphics sprite sheet
+12: 256 80 B&W 1 bit binary image. Bitmap font.
+13: 320 240 title screen background
+14: 256 160 smash pack title graphic
+15: 64 288 controller sprite sheet
+16: 8 128 controller button label sprite sheet
+
+SECTIONS smash pack mainblock.kml
+0: 160 112 altered beast
+1: 160 112 columns
+2: 160 112 golden axe
+3: 160 112 outrun
+4: 160 112 phantasy star II
+5: 160 112 super shinobi
+6: 160 112 sonic spinball
+7: 160 112 vectorman
+8: 320 240 sega logo
+9: 12 12 cursor
+10: 17 36 navigation arrow sprite sheet
+11: 256 80 B&W 1 bit binary image. bitmap font. Identical to smash2 bitmap font section
+12: 320 240 title background image
+13: 256 160 smash pack title graphic
+14: 64 288 controller sprite sheet
+15: 8 128 controller button label sprite sheet
+
+SoundBlk
+unsigned 8 bit pcm
+little endian byte order
+1 channel
+sample rate varies
+
+SECTIONS smash pack 1 soundblk.kml
+0: 44100hz sega cheer
+1: 22050hz sega cheer
+2: 11025hz sega cheer
+3: 44100hz menu navigation sound
+4: 22050hz menu navigation sound
+5: 11025hz menu navigation sound
+6: 44100hz menu change menu sound
+7: 22050hz menu change menu sound
+8: 11025hz menu change menu sound
+
+SECTIONS smash pack 2 soundblk.kml
+0: 44100hz sega shout
+1: 22050hz sega shout
+2: 11025hz sega shout
+sections 3-8 in soundblk.kml are identical in the two packs
