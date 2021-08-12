@@ -1,15 +1,24 @@
 encode with pack 2 encoding
+
 .\smashpackkvqutil.py -e -2 '.\Ristar (UE) (Aug 1994) [!].bin' 'Shining Force.kvq'
+
 decode with pack 1 encoding
+
 .\smashpackkvqutil.py -d -1 '.\Phantasy Star II.kvq' ps2.bin
 
 
 convert save file
+
 .\kmlConverter.py 'GameSav3.KML'
+
 png images
+
 .\kmlConverter.py 'MainBlok.kml' 'Smash2.exe'
+
 wav files
+
 .\kmlConverter.py 'SoundBlk.kml'
+
 
 kml script uses Pillow and bitarray.
 
