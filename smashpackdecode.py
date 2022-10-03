@@ -1,56 +1,55 @@
 import sys
-import struct
 
-inputFile = bytearray(open(sys.argv[3], 'rb').read())
+def main():
+	encodeString = None
+	match sys.argv[2]:
+		case '-1':
+			encodeString = bytearray('Encoded for KGen Ultra / Sega Smash Pack / Snake KML 1999! ', 'ascii')
+		case '-2':
+			encodeString = bytearray('Encoded for KGen Ultra / Sega Smash Pack II / Snake KML 1999! ', 'ascii')
+		case '-p':
+			encodeString = bytearray('Encoded for KGen Ultra / Sega Puzzle Pack / Snake KML 1999! ', 'ascii')
+		case _:
+			raise Exception('Invalid pack')
 
-outFile = None 
+	outBytes = None
+	with open(sys.argv[3], 'rb') as inputFile:
+		inBytes = inputFile.read()
+		match sys.argv[1]:
+			case '-d':
+				outBytes = decode(inBytes, encodeString)
+			case '-e':
+				outBytes = encode(inBytes, encodeString)
+			case _:
+				raise Exception('Invalid action')
 
-encodeStringPack1 = bytearray('Encoded for KGen Ultra / Sega Smash Pack / Snake KML 1999! ', 'ascii')
-encodeStringPack2 = bytearray('Encoded for KGen Ultra / Sega Smash Pack II / Snake KML 1999! ', 'ascii')
+	with open(sys.argv[4], 'wb') as outFile:
+		outFile.write(outBytes)
 
-encodeString = None
-
-if sys.argv[2] == '-1':
-	encodeString = encodeStringPack1
-else:
-	encodeString = encodeStringPack2
-
-encodeStringOffset = 0
-scramble = 6
-
-if sys.argv[1] == '-d':
-	romSize = len(inputFile)-8
-	outFile = bytearray(romSize)
-	for index in range(romSize):
-		encodedByte = inputFile[8+index]
-		encodeStringCharacter = encodeString[encodeStringOffset]
+def decode(inBytes, encodeString):
+	scramble = 6
+	outFile = bytearray()
+	for index, encodedByte in enumerate(inBytes[8:]):
+		encodeStringCharacter = encodeString[index % len(encodeString)]
 		decodedByte = ((encodedByte ^ encodeStringCharacter ^ 0x80) - scramble) & 0xFF
-		outFile[index] = decodedByte
+		outFile.append(decodedByte)
 		scramble += 3
-		if encodeStringOffset < len(encodeString) - 1:
-			encodeStringOffset += 1
-		else:
-			encodeStringOffset = 0
-else:
-	romSize = len(inputFile)
-	outFile = bytearray(romSize+8)
+	return outFile
+
+def encode(inBytes,encodeString):
+	scramble = 6
+	outFile = bytearray()
 	check = 0
-	for index in range(romSize):
-		romByte = inputFile[index]
-		encodeStringCharacter = encodeString[encodeStringOffset]
+	for index, romByte in enumerate(inBytes):
+		encodeStringCharacter = encodeString[index % len(encodeString)]
 		encodedByte = ((romByte + scramble) & 0xFF) ^ 0x80 ^ encodeStringCharacter
-		outFile[8+index] = encodedByte
+		outFile.append(encodedByte)
 		scramble += 3
 		check = (check + encodedByte + romByte) & 0xFFFFFFFF
-		if encodeStringOffset < len(encodeString) - 1:
-			encodeStringOffset += 1
-		else:
-			encodeStringOffset = 0
-	checkBytes1 = check.to_bytes(32, 'little')
-	checkBytes2 = ((~check) & 0xFFFFFFFF).to_bytes(32, 'little')
-	for index in range(4):
-		outFile[index] = checkBytes1[index]
-	for index in range(4):
-		outFile[4+index] = checkBytes2[index]
+	checkBytes1 = check.to_bytes(4, 'little')
+	checkBytes2 = ((~check) & 0xFFFFFFFF).to_bytes(4, 'little')
+	outFile = checkBytes1 + checkBytes2 + outFile
+	return outFile
 
-open(sys.argv[4], 'wb').write(outFile)
+if __name__=="__main__":
+    main()

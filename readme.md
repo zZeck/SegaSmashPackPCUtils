@@ -6,6 +6,9 @@ decode with pack 1 encoding
 
 .\smashpackkvqutil.py -d -1 '.\Phantasy Star II.kvq' ps2.bin
 
+decode with puzzle pack encoding
+
+.\smashpackkvqutil.py -d -p '.\Phantasy Star II.kvq' ps2.bin
 
 convert save file
 
